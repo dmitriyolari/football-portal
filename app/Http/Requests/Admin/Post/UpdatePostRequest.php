@@ -1,0 +1,54 @@
+<?php
+
+namespace App\Http\Requests\Admin\Post;
+
+use App\Models\Category;
+use App\Models\Post;
+use App\Models\Tag;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
+/**
+ * @property int[] tags
+ * @property mixed $image_delete
+ */
+class UpdatePostRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules(): array
+    {
+        return [
+            'slug'         => [
+                'required',
+                'string',
+                Rule::unique(Post::class, 'slug')->ignore($this->route('post')),
+            ],
+            'title'        => ['required', 'string'],
+            'preview_text' => ['required', 'string'],
+            'text'         => ['required', 'string'],
+            'category_id'  => [
+                'nullable',
+                'int',
+                Rule::exists(Category::class, 'id'),
+            ],
+            'tags'         => ['array'],
+            'tags.*'       => ['int', Rule::exists(Tag::class, 'id')],
+            'image'        => ['nullable', 'max:10000'],
+            'image_delete' => ['boolean'],
+        ];
+    }
+}

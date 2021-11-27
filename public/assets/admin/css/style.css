@@ -1,0 +1,15 @@
+.label {
+    display: block;
+
+    width: 100%;
+}
+
+.label > h6 {
+    font-weight: 700;
+}
+
+.label_input {
+    display: block;
+
+    width: 100%;
+}
